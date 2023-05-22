@@ -1,0 +1,24 @@
+{
+  "name": "ircclient",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ndubs18/IRCclient.git"
+  },
+  "author": "Nick Winkler",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ndubs18/IRCclient/issues"
+  },
+  "homepage": "https://github.com/ndubs18/IRCclient#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1"
+  }
+}
