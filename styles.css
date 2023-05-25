@@ -1,35 +1,61 @@
 body {
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-  }
+  padding: 0;
+  margin: 0;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  /* justify-content: center; */
+}
 
-  #message-container {
-    width: 80%;
-    max-width: 1200px;
-    list-style: none;
-  }
+#user-list{
+  width: 20%;
+  height: fit-content;
+  background-color: #CCC;
+}
 
-  #message-container {
-    background-color: #CCC;
-    padding: 5px;
-  }
+#user-list h3 {
+  text-align: center;
+}
 
-  #message-container li:nth-child(2n) {
-    background-color: #FFF;
-  }
+#message-container {
+  width: 80%;
+  max-width: 1200px;
+  list-style: none;
+}
 
-  #send-container {
-    position: fixed;
-    padding-bottom: 30px;
-    bottom: 0;
-    background-color: white;
-    max-width: 1200px;
-    width: 80%;
-    display: flex;
-  }
+#message-container {
+  /* background-color: #CCC; */
+  padding: 5px;
+}
 
-  #message-input {
-    flex-grow: 1;
-  }
+#chat-feed {
+  width: 100%;
+}
+
+#chat-feed h3 {
+  width: 5rem;
+  margin: 0 auto;
+}
+
+#message-container li:nth-child(even) {
+  background-color: #CCC;
+}
+
+#message-container li {
+  margin: 5px 0;
+  width: 100%
+}
+
+#send-container {
+  position: fixed;
+  padding-bottom: 30px;
+  bottom: 0;
+  background-color: white;
+  max-width: 1200px;
+  width: 80%;
+  display: flex;
+}
+
+#message-input {
+  flex-grow: 1;
+}
