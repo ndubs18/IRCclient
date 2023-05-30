@@ -7,14 +7,18 @@ body {
   /* justify-content: center; */
 }
 
-#user-list{
+#user-container{
   width: 20%;
   height: fit-content;
   background-color: #CCC;
 }
 
-#user-list h3 {
+#user-container h3 {
   text-align: center;
+}
+
+#user-list {
+  list-style: none;
 }
 
 #message-container {

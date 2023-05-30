@@ -1,10 +1,19 @@
 var socket = io('http://localhost:3000');
-
-var messages = document.getElementById('message-container');
-var form = document.getElementById('send-container');
-var input = document.getElementById('message-input');
 let roomList = document.getElementById('room-container');
 
+let userList = document.getElementById('user-list');
+let messages = document.getElementById('message-container');
+let form = document.getElementById('send-container');
+let input = document.getElementById('message-input');
+
+let appendMessage = (msg) => {
+    let item = document.createElement('li');
+    item.innerHTML = msg;
+    messages.appendChild(item);
+
+}
+
+// Get username when user joins a room
 let personName;
 if(messages){
   personName = prompt("What is your name?")
@@ -16,37 +25,47 @@ if(personName === '') {
 }
 
 if(personName) {
-    socket.emit('username', personName);
+    appendMessage('You joined')
+    socket.emit('new-user', roomName, personName);
 }
 
-socket.on('username', personName => {
+socket.on('user-disconected', username => {
+    console.log(username + ' has disconected');
+    appendMessage(username);
+})
+
+socket.on('user-connected', personName => {
     let item = document.createElement('li');
     item.textContent = personName;
     item.textContent += ' has joined';
     messages.appendChild(item);
 })
 
+//when a room is created, add it too the room-container (room-list)
 socket.on('room-created', room => {
   const roomElement = document.createElement('div');
-  roomElement.innerHTML = room;
+  roomElement.innerText = room;
   const roomLink = document.createElement('a');
   roomLink.href = `/${room}`;
-  roomLink.innerHTML = 'Join';
+  roomLink.textContent = 'Join';
   roomList.append(roomElement);
   roomList.append(roomLink); 
 })
 
-form.addEventListener('submit', function(e) {
+form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (input.value) {
-    socket.emit('chat message', input.value);
-    input.value = '';
+        appendMessage(personName + ': ' + input.value)
+        socket.emit('send-chat-message', {roomName: roomName, name: personName, msg: input.value});
+        input.value = '';
     }
 });
 
-socket.on('chat message', msg => {
-    var item = document.createElement('li');
-    item.textContent = `${msg}`;
+socket.on('chat-message', msg => {
+    console.log(msg.msg);
+    let item = document.createElement('li');
+    item.innerHTML = `<b>${msg.name}</b>: ${msg.msg}`;
+
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
 });
