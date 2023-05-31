@@ -9,6 +9,7 @@ body {
 
 #user-container{
   width: 20%;
+  padding: 0 0.25rem;
   height: fit-content;
   background-color: #CCC;
 }

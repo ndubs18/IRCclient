@@ -41,7 +41,7 @@ app.get('/:room', (req, res) => {
     if(!rooms[req.params.room]) {
       return res.redirect('/');
     }
-    res.render('room', {roomName: req.params.room})
+    res.render('room', {roomName: req.params.room, users: users})
 })
 
 //socket.io server
@@ -51,6 +51,7 @@ io.on('connection', (socket) => {
     //console.log('user has disconnected');
       socket.emit('user-disconnected', users[socket.id]);
       delete users[socket.id];
+      console.log(users)
   });
 
   socket.on('new-user', (room, name) => {
@@ -58,9 +59,8 @@ io.on('connection', (socket) => {
     
     //place the socket in a room
     socket.join(room);
-  
-    // socket.broadcast.emit('user-connected', name);
-    socket.to(room).emit('user-connected', name);
+    socket.to(room).emit('user-connected', users, name);
+    //socket.emit('user-connected', users, name);
   
   })
 

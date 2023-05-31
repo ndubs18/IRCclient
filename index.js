@@ -6,12 +6,21 @@ let messages = document.getElementById('message-container');
 let form = document.getElementById('send-container');
 let input = document.getElementById('message-input');
 
+let leaveLink = document.getElementById('leave-link');
+
 let appendMessage = (msg) => {
     let item = document.createElement('li');
     item.innerHTML = msg;
     messages.appendChild(item);
 
 }
+
+let appendUser = (personName) => {
+    let user = document.createElement('li');
+    user.innerText = personName;
+    userList.appendChild(user);
+}
+
 
 // Get username when user joins a room
 let personName;
@@ -26,20 +35,34 @@ if(personName === '') {
 
 if(personName) {
     appendMessage('You joined')
+    appendUser(personName);
     socket.emit('new-user', roomName, personName);
 }
 
-socket.on('user-disconected', username => {
-    console.log(username + ' has disconected');
-    appendMessage(username);
+socket.on('user-disconnected', personName => {
+    console.log(personName + ' has disconected');
+    appendMessage(personName);
 })
 
-socket.on('user-connected', personName => {
+socket.on('user-connected', (users, personName) => {
     let item = document.createElement('li');
     item.textContent = personName;
     item.textContent += ' has joined';
     messages.appendChild(item);
+
+    //when a another user joins loop over users list and add
+    //the new user to the list
+    for(user in users) {
+        if(users[user] == personName)
+        appendUser(users[user]);
+    }
+
 })
+
+//leave room
+// leaveLink.addEventListener('click', () => {
+//     socket.emit('disconnect', personName);
+// })
 
 //when a room is created, add it too the room-container (room-list)
 socket.on('room-created', room => {
@@ -62,7 +85,7 @@ form.addEventListener('submit', (e) => {
 });
 
 socket.on('chat-message', msg => {
-    console.log(msg.msg);
+    
     let item = document.createElement('li');
     item.innerHTML = `<b>${msg.name}</b>: ${msg.msg}`;
 

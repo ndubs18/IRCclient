@@ -11,13 +11,18 @@
 </head>
 <body>
   <div id="user-container">
-    <h3>Users in room</h3>
-    <ul id="user-list"></ul>
+    <h3>Users in <%=roomName%></h3>
+     <ul id="user-list">
+      <% Object.keys(users).forEach(user => { %>
+    <li><%=users[user]%></li>
+  <% }) %>
+      </ul>
   </div>
   <div id="chat-feed">
     <h3>Chat</h3>
     <ul id="message-container"></ul>
     <form id="send-container">
+    <a id="leave-link" href="/">Leave room</a>
     <input type="text" id="message-input">
     <button type="submit" id="send-button">Send</button>
     </form>
