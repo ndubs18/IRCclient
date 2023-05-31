@@ -9,17 +9,21 @@
     <title>Document</title>
 </head>
 <body>
+
+<h1> Create or join room</h1>
 <div id="room-container">
+
+  <form id="room-form" action="/room" method="post">
+    <input type="text" name="room" required>
+    <button type="submit">New Room</button>
+  </form>
+
+  <h4>Room List</h4>
   <% Object.keys(rooms).forEach(room => { %>
-    <div><%= room %></div>
-    <a href='/<%=room%>'>Join</a>
+    <div id="roomName"><%= room %>
+      <a href='/<%=room%>'>Join</a></div>
   <% }) %>
 </div>
-
-<form action="/room" method="post">
-  <input type="text" name="room" required>
-  <button type="submit">New Room</button>
-</form>
 <script src="/socket.io/socket.io.js"></script>
 </body>
 </html>

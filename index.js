@@ -12,7 +12,6 @@ let appendMessage = (msg) => {
     let item = document.createElement('li');
     item.innerHTML = msg;
     messages.appendChild(item);
-
 }
 
 let appendUser = (personName) => {
@@ -20,7 +19,6 @@ let appendUser = (personName) => {
     user.innerText = personName;
     userList.appendChild(user);
 }
-
 
 // Get username when user joins a room
 let personName;
@@ -59,10 +57,6 @@ socket.on('user-connected', (users, personName) => {
 
 })
 
-//leave room
-// leaveLink.addEventListener('click', () => {
-//     socket.emit('disconnect', personName);
-// })
 
 //when a room is created, add it too the room-container (room-list)
 socket.on('room-created', room => {
@@ -71,8 +65,9 @@ socket.on('room-created', room => {
   const roomLink = document.createElement('a');
   roomLink.href = `/${room}`;
   roomLink.textContent = 'Join';
+  roomElement.append(roomLink);
   roomList.append(roomElement);
-  roomList.append(roomLink); 
+
 })
 
 form.addEventListener('submit', (e) => {
@@ -92,3 +87,11 @@ socket.on('chat-message', msg => {
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
 });
+
+//leave room
+leaveLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log("leaving...");
+    socket.emit('user-left', roomName, socket.id);
+    window.location.replace('/');
+})

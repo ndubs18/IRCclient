@@ -51,14 +51,23 @@ io.on('connection', (socket) => {
     //console.log('user has disconnected');
       socket.emit('user-disconnected', users[socket.id]);
       delete users[socket.id];
+      
+      //console.log(users);
   });
+
+  socket.on('user-left', (roomName, id) => {
+    delete rooms[roomName].users[id];
+    //console.log(rooms);
+
+    socket.to(roomName).emit('user-left-message', id, users[id]);
+  })
 
   socket.on('new-user', (room, name) => {
     users[socket.id] = name;
 
     rooms[room].users[socket.id] = name;
 
-    console.log(rooms)
+    //console.log(rooms);
     
     //place the socket in a room
     socket.join(room);

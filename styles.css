@@ -1,10 +1,39 @@
 body {
   padding: 0;
   margin: 0;
-  display: flex;
   height: 100%;
   width: 100%;
-  /* justify-content: center; */
+  text-align: center;
+}
+
+#room-container {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+#room-container h4 {
+  width: fit-content;
+  margin: 2rem auto 1rem;
+  border-bottom: 2px solid black;
+}
+
+#room-container div{
+  width: 100%;
+}
+
+#room-container a {
+  margin: 1rem;
+}
+
+#room-form {
+  width: 100%;
+  padding-top: 4rem;
+}
+
+#room-form input {
+  width: 15rem;
 }
 
 #user-container{
