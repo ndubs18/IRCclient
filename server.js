@@ -19,7 +19,7 @@ app.use(express.static(__dirname));
 app.set('view engine', 'ejs');
 
 //rooms and users initializations
-const rooms = { room: {} };
+const rooms = { };
 const users = { };
 
 app.get('/', (req, res) => {
@@ -41,7 +41,7 @@ app.get('/:room', (req, res) => {
     if(!rooms[req.params.room]) {
       return res.redirect('/');
     }
-    res.render('room', {roomName: req.params.room, users: users})
+    res.render('room', {roomName: req.params.room, users: rooms[req.params.room].users})
 })
 
 //socket.io server
@@ -51,15 +51,18 @@ io.on('connection', (socket) => {
     //console.log('user has disconnected');
       socket.emit('user-disconnected', users[socket.id]);
       delete users[socket.id];
-      console.log(users)
   });
 
   socket.on('new-user', (room, name) => {
     users[socket.id] = name;
+
+    rooms[room].users[socket.id] = name;
+
+    console.log(rooms)
     
     //place the socket in a room
     socket.join(room);
-    socket.to(room).emit('user-connected', users, name);
+    socket.to(room).emit('user-connected', rooms[room].users, name);
     //socket.emit('user-connected', users, name);
   
   })
