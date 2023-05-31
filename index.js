@@ -49,7 +49,7 @@ socket.on('user-connected', (users, personName) => {
     item.textContent = personName;
     item.textContent += ' has joined';
     messages.appendChild(item);
-
+    //just added this for test purposes
     //when a another user joins loop over users list and add
     //the new user to the list
     for(user in users) {
