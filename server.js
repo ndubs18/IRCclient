@@ -48,8 +48,8 @@ app.get('/:room', (req, res) => {
 io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
-    //console.log('user has disconnected');
-      socket.emit('user-disconnected', users[socket.id]);
+    //we don't need to emit a message for when anyone disconects
+    //socket.emit('user-disconnected', users[socket.id]);
       delete users[socket.id];
       
       //console.log(users);
@@ -57,7 +57,6 @@ io.on('connection', (socket) => {
 
   socket.on('user-left', (roomName, id) => {
     delete rooms[roomName].users[id];
-    //console.log(rooms);
 
     socket.to(roomName).emit('user-left-message', id, users[id]);
   })
@@ -91,8 +90,6 @@ server.listen( port, () => {
 // server.listen( port, '192.168.1.18', () => {
 //   console.log('listening on port 3000');
 // });
-
-
 
 // server.listen( port, '172.31.42.251', () => {
 //   console.log('listening on port 3000');

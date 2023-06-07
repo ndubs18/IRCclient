@@ -16,6 +16,8 @@ let appendMessage = (msg) => {
 
 let appendUser = (personName) => {
     let user = document.createElement('li');
+    //add an id so we can remove from list by personName
+    user.id = personName;
     user.innerText = personName;
     userList.appendChild(user);
 }
@@ -37,11 +39,6 @@ if(personName) {
     socket.emit('new-user', roomName, personName);
 }
 
-socket.on('user-disconnected', personName => {
-    console.log(personName + ' has disconected');
-    appendMessage(personName);
-})
-
 socket.on('user-connected', (users, personName) => {
     let item = document.createElement('li');
     item.textContent = personName;
@@ -54,6 +51,8 @@ socket.on('user-connected', (users, personName) => {
         if(users[user] == personName)
         appendUser(users[user]);
     }
+
+    console.log(userList);
 
 })
 
@@ -70,17 +69,18 @@ socket.on('room-created', room => {
 
 })
 
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (input.value) {
-        appendMessage(personName + ': ' + input.value)
-        socket.emit('send-chat-message', {roomName: roomName, name: personName, msg: input.value});
-        input.value = '';
-    }
-});
+if(form) {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (input.value) {
+            appendMessage(personName + ': ' + input.value)
+            socket.emit('send-chat-message', {roomName: roomName, name: personName, msg: input.value});
+            input.value = '';
+        }
+    })
+};
 
 socket.on('chat-message', msg => {
-    
     let item = document.createElement('li');
     item.innerHTML = `<b>${msg.name}</b>: ${msg.msg}`;
 
@@ -91,7 +91,18 @@ socket.on('chat-message', msg => {
 //leave room
 leaveLink.addEventListener('click', (e) => {
     e.preventDefault();
-    console.log("leaving...");
     socket.emit('user-left', roomName, socket.id);
     window.location.replace('/');
 })
+
+socket.on('user-left-message', (id, personName) => {
+    //grab the li element from userList that we want to delete
+    console.log(personName);
+    console.log(userList);
+    let toDelete = document.getElementById(personName);
+    toDelete.remove();
+    appendMessage(personName + ' has disconnected');
+})
+
+
+
