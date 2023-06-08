@@ -56,7 +56,6 @@ socket.on('user-connected', (users, personName) => {
 
 })
 
-
 //when a room is created, add it too the room-container (room-list)
 socket.on('room-created', room => {
   const roomElement = document.createElement('div');
@@ -66,7 +65,6 @@ socket.on('room-created', room => {
   roomLink.textContent = 'Join';
   roomElement.append(roomLink);
   roomList.append(roomElement);
-
 })
 
 if(form) {
@@ -78,7 +76,7 @@ if(form) {
             input.value = '';
         }
     })
-};
+}
 
 socket.on('chat-message', msg => {
     let item = document.createElement('li');
@@ -86,7 +84,7 @@ socket.on('chat-message', msg => {
 
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
-});
+})
 
 //leave room
 leaveLink.addEventListener('click', (e) => {

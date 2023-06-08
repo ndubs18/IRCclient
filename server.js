@@ -52,12 +52,10 @@ io.on('connection', (socket) => {
     //socket.emit('user-disconnected', users[socket.id]);
       delete users[socket.id];
       
-      //console.log(users);
   });
-
   socket.on('user-left', (roomName, id) => {
     delete rooms[roomName].users[id];
-
+    socket.leave();
     socket.to(roomName).emit('user-left-message', id, users[id]);
   })
 
@@ -71,26 +69,14 @@ io.on('connection', (socket) => {
     //place the socket in a room
     socket.join(room);
     socket.to(room).emit('user-connected', rooms[room].users, name);
-    //socket.emit('user-connected', users, name);
-  
   })
 
   socket.on('send-chat-message', (msg) => {
       // socket.broadcast.emit('chat-message', {msg: msg, name: users[socket.id]});
       socket.to(msg.roomName).emit('chat-message', msg);
-      //io.emit('chat message', msg);
      })
 });
 
 server.listen( port, () => {
   console.log('listening on port 3000');
 });
-
-//let other devices on the network connect with that hostname (ip address)
-// server.listen( port, '192.168.1.18', () => {
-//   console.log('listening on port 3000');
-// });
-
-// server.listen( port, '172.31.42.251', () => {
-//   console.log('listening on port 3000');
-// });
