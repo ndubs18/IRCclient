@@ -6,6 +6,9 @@ let messages = document.getElementById('message-container');
 let form = document.getElementById('send-container');
 let input = document.getElementById('message-input');
 
+let disconnectBtn = document.getElementById('disconnectBtn');
+let shutdownBtn = document.getElementById('shutdown');
+
 let leaveLink = document.getElementById('leave-link');
 
 let appendMessage = (msg) => {
@@ -52,19 +55,6 @@ socket.on('user-connected', (users, personName) => {
         appendUser(users[user]);
     }
 
-    console.log(userList);
-
-})
-
-//when a room is created, add it too the room-container (room-list)
-socket.on('room-created', room => {
-  const roomElement = document.createElement('div');
-  roomElement.innerText = room;
-  const roomLink = document.createElement('a');
-  roomLink.href = `/${room}`;
-  roomLink.textContent = 'Join';
-  roomElement.append(roomLink);
-  roomList.append(roomElement);
 })
 
 if(form) {
@@ -87,20 +77,49 @@ socket.on('chat-message', msg => {
 })
 
 //leave room
-leaveLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    socket.emit('user-left', roomName, socket.id);
-    window.location.replace('/');
-})
+if(messages) {
+    leaveLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        socket.emit('user-left', roomName, socket.id);
+        window.location.replace('/');
+    })
+}
+
 
 socket.on('user-left-message', (id, personName) => {
     //grab the li element from userList that we want to delete
-    console.log(personName);
-    console.log(userList);
     let toDelete = document.getElementById(personName);
     toDelete.remove();
     appendMessage(personName + ' has disconnected');
 })
+
+
+//index.ejs//
+
+//when a room is created, add it too the room-container (room-list)
+socket.on('room-created', room => {
+    const roomElement = document.createElement('div');
+    roomElement.innerText = room;
+    const roomLink = document.createElement('a');
+    roomLink.href = `/${room}`;
+    roomLink.textContent = 'Join';
+    roomElement.append(roomLink);
+    roomList.append(roomElement);
+  })
+
+//leave server
+disconnectBtn.addEventListener('click', () => {
+    socket.emit('force-disconnect');
+    alert('you have been disconnected from the server');
+})
+
+shutdownBtn.addEventListener('click', () => {
+    socket.emit('close-server');
+})
+
+socket.on('server-shutdown', () => { 
+    console.log('server shutdown');
+    window.location.replace('/serverdown')})
 
 
 

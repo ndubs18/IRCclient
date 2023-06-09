@@ -26,6 +26,14 @@ app.get('/', (req, res) => {
     res.render('index', { rooms: rooms });
 });
 
+app.get('/serverDown', (req, res) => {
+  res.render('shutdown');
+})
+
+app.get('/clientDisconnected', (req, res) => {
+  res.render('disconnect');
+})
+
 app.post('/room', (req, res) => {
   if(rooms[req.body.room] != null) {
     return res.redirect('/');
@@ -46,13 +54,25 @@ app.get('/:room', (req, res) => {
 
 //socket.io server
 io.on('connection', (socket) => {
+  console.log(socket.id + ' has connected');
 
-  socket.on('disconnect', () => {
-    //we don't need to emit a message for when anyone disconects
-    //socket.emit('user-disconnected', users[socket.id]);
+  //whenever a client/socket disconnects log the reason and make sure we remove them from our users list
+  socket.on('disconnect', (reason) => {
+      console.log(`${socket.id} has disconnected from the server because: ${reason}`)
       delete users[socket.id];
-      
-  });
+  })
+  //when client forces their disconnect from server, disconnect they're socket and don't reconnect
+  socket.on('force-disconnect', () => {
+    socket.disconnect();
+  })
+
+  //shutdown the server
+  socket.on('close-server', () => {
+    io.emit('server-shutdown');
+    io.disconnectSockets();
+    server.close()
+  })
+
   socket.on('user-left', (roomName, id) => {
     delete rooms[roomName].users[id];
     socket.leave();
@@ -63,8 +83,6 @@ io.on('connection', (socket) => {
     users[socket.id] = name;
 
     rooms[room].users[socket.id] = name;
-
-    //console.log(rooms);
     
     //place the socket in a room
     socket.join(room);
