@@ -36,60 +36,9 @@ body {
   width: 15rem;
 }
 
-#user-container{
-  width: 20%;
-  padding: 0 0.25rem;
-  height: fit-content;
-  background-color: #CCC;
+#powerButtons {
+  margin-top: 1rem;
 }
-
-#user-container h3 {
-  text-align: center;
-}
-
-#user-list {
-  list-style: none;
-}
-
-#message-container {
-  width: 80%;
-  max-width: 1200px;
-  list-style: none;
-}
-
-#message-container {
-  /* background-color: #CCC; */
-  padding: 5px;
-}
-
-#chat-feed {
-  width: 100%;
-}
-
-#chat-feed h3 {
-  width: 5rem;
-  margin: 0 auto;
-}
-
-#message-container li:nth-child(even) {
-  background-color: #CCC;
-}
-
-#message-container li {
-  margin: 5px 0;
-  width: 100%
-}
-
-#send-container {
-  position: fixed;
-  padding-bottom: 30px;
-  bottom: 0;
-  background-color: white;
-  max-width: 1200px;
-  width: 80%;
-  display: flex;
-}
-
-#message-input {
-  flex-grow: 1;
+#shutdown {
+  color: red;
 }
