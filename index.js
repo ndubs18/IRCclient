@@ -9,6 +9,7 @@ let input = document.getElementById('message-input');
 let disconnectBtn = document.getElementById('disconnectBtn');
 let shutdownBtn = document.getElementById('shutdown');
 
+let multipleRoomsBtn = document.getElementById('joinMultipleRooms');
 let leaveLink = document.getElementById('leave-link');
 
 let appendMessage = (msg) => {
@@ -93,19 +94,38 @@ socket.on('user-left-message', (id, personName) => {
     appendMessage(personName + ' has disconnected');
 })
 
-
 //index.ejs//
 
 //when a room is created, add it too the room-container (room-list)
 socket.on('room-created', room => {
     const roomElement = document.createElement('div');
     roomElement.innerText = room;
+
+    //checkbox
+    const roomSelector = document.createElement('input');
+    roomSelector.type = 'checkbox';
+    roomSelector.value = room;
+
     const roomLink = document.createElement('a');
     roomLink.href = `/${room}`;
     roomLink.textContent = 'Join';
+
+    roomElement.prepend(roomSelector);
     roomElement.append(roomLink);
     roomList.append(roomElement);
   })
+
+//Joining multiple rooms
+multipleRoomsBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    let roomsToJoin = document.querySelectorAll("input[type='checkbox']:checked");
+    
+    let roomNameList = [];
+    for(i = 0; i<roomsToJoin.length; ++i) {
+        roomNameList.push(roomsToJoin[i].value);
+    }
+    socket.emit('join-multiple-rooms', roomNameList);
+})
 
 //leave server
 disconnectBtn.addEventListener('click', () => {
@@ -118,8 +138,16 @@ shutdownBtn.addEventListener('click', () => {
 })
 
 socket.on('server-shutdown', () => { 
-    console.log('server shutdown');
-    window.location.replace('/serverdown')})
+    console.log('server is shutting down');
+})
 
+//if we have a connection error log it
+socket.on("connect_error", (err) => {
+    console.log(`connect_error due to ${err.message}`);
+});
+
+socket.on("disconnect", (reason) => {
+    console.log(reason);
+  });
 
 

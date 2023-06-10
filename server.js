@@ -3,6 +3,7 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+
 // Allow any origin for testing purposes. This should be changed on production
 const io = new Server(server, 
   {cors: { origin: '*', 
@@ -54,9 +55,7 @@ app.get('/:room', (req, res) => {
 
 //socket.io server
 io.on('connection', (socket) => {
-  console.log(socket.id + ' has connected');
-
-  //whenever a client/socket disconnects log the reason and make sure we remove them from our users list
+  //whenever a socket disconnects log the reason and make sure we remove them from our users list
   socket.on('disconnect', (reason) => {
       console.log(`${socket.id} has disconnected from the server because: ${reason}`)
       delete users[socket.id];
@@ -93,6 +92,14 @@ io.on('connection', (socket) => {
       // socket.broadcast.emit('chat-message', {msg: msg, name: users[socket.id]});
       socket.to(msg.roomName).emit('chat-message', msg);
      })
+
+  socket.on('join-multiple-rooms', roomList => {
+    roomList.forEach(room => {
+      rooms[room].users[socket.id] = 'test';
+    });
+    console.log(rooms);
+    socket.join(roomList);
+  })
 });
 
 server.listen( port, () => {
