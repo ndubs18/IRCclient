@@ -11,6 +11,6 @@ $ npm install
 ```
 
 ### Scripts
-
+```sh
 $ npm run start
 ```
