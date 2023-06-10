@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles.css">
     <script defer src="../index.js"></script>
-    <title>Document</title>
+    <title>IRC Client</title>
 </head>
 <body>
 
@@ -14,17 +14,21 @@
 <div id="room-container">
   <form id="room-form" action="/room" method="post">
     <input type="text" name="room" required>
-    <button type="submit">New Room</button>
+    <button type="submit">Create and join new room</button>
   </form>
   <div id="powerButtons">
   <button id="disconnectBtn">disconnect from server</button>
   <button id="shutdown">Shutdown server</button>
   </div>
   <h4>Room List</h4>
-  <% Object.keys(rooms).forEach(room => { %>
-    <div id="roomName"><%= room %>
-      <a href='/<%=room%>'>Join</a></div>
-  <% }) %>
+    <div><button id="joinMultipleRooms" type="submit">Join multiple rooms</button></div>
+    <% Object.keys(rooms).forEach(room => { %>
+      <div id="roomName">
+        <input name="room" value='<%=room%>' type="checkbox">
+        <%= room %>
+        <a href='/<%=room%>'>Join</a>
+      </div>
+    <% }) %>
 </div>
 <script src="/socket.io/socket.io.js"></script>
 </body>
